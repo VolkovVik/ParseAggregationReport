@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConsoleApp1;
+using ParseReport.Model;
 
 namespace ParseReport
 {
@@ -8,9 +10,26 @@ namespace ParseReport
     {
         static void Main(string[] args)
         {
+            Console.WindowWidth = 150;
             Console.Title = "Parse report";
             Console.ForegroundColor = ConsoleColor.Blue;
 
+            CheckReportData();
+
+            Console.WriteLine("Press any key");
+            Console.ReadKey();
+        }
+
+        private static void CheckDatabaseData()
+        {
+            const string databaseName = "aspu";
+            var database = new MongoDb<BlockModel>(databaseName, "blocks");
+            var blocks = database.Read();
+            var database1 = new MongoDb<ProductModel>(databaseName, "products");
+            var products = database1.Read();
+        }
+
+        private static void CheckReportData() {
             const string pathUse = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1355_CreateUtilisationReport.json";
             const string pathAggregation = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1356_CreateAggregationReport.json";
 
@@ -31,9 +50,6 @@ namespace ParseReport
 
 
             var parent = FindParent(report.GetAggregationData(pathAggregation), "04640112140537+npOcP<");
-
-            Console.WriteLine("Press any key");
-            Console.ReadKey();
         }
 
         private static IEnumerable<string> GetUniqueCodes(IEnumerable<string> codes)
