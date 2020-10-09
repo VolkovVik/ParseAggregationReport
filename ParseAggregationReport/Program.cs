@@ -1,51 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
-namespace ParseAggregationReport
+namespace ParseReport
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.Title = "Parse aggregation report";
+            Console.Title = "Parse report";
             Console.ForegroundColor = ConsoleColor.Blue;
 
-            // d:\Project\Vekas\_gitHub\TestParseAggregationReport\5445.json
+            const string pathUse = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1355_CreateUtilisationReport.json";
+            const string pathAggregation = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1356_CreateAggregationReport.json";
 
-            Console.WriteLine("Enter path file:");
-            var path = Console.ReadLine();
-            if ( string.IsNullOrWhiteSpace( path ) ) {
-                Console.WriteLine( "File path not set" );
-                return;
-            }
-            if (!File.Exists(path))
-            {
-                Console.WriteLine("File not found");
-                return;
-            }
+            var report = new Report();
+            var aggregationProduct = report.GetAggregationProduct(pathAggregation).ToList();
+            var useProduct = report.GetUseProduct(pathUse)
+                                   .Select(p =>
+                                        p.StartsWith("01") || p.StartsWith("02")
+                                            ? p.Substring(0, 25)
+                                            : p.Substring(0, 21))
+                                   .ToList();
 
-            using var r1 = new StreamReader(path);
-            var str = r1.ReadToEnd();
-            var report = JsonConvert.DeserializeObject<AggregationReport>(str);
-            var json = JsonConvert.SerializeObject(report, Formatting.Indented);
-            // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-            foreach (var item in report.aggregationUnits)
-            {
-                var unique = GetUniqueCodes( item.sntins).ToList();
-                var duplicate=GetDuplicateCodes( item.sntins).ToList();
-                if (duplicate.Any())
-                {
-                    Console.WriteLine( $"{item.unitSerialNumber}" );
-                    Console.WriteLine($"{new string(' ', 4)}duplicate code - {duplicate.Count}");
-                    foreach (var code in duplicate)
-                        Console.WriteLine( $"{new string( ' ', 4 )}{code}");
-                }
-                var result = ContainsCode(item.sntins, "11111", "22222");
-            }
-            
+            var diffirent = aggregationProduct.Except(useProduct).ToList();
+            var common = aggregationProduct.Intersect(useProduct).ToList();
+
+            var useDuplicate = GetDuplicateCodes(useProduct).ToList();
+            var aggregationDuplicate = GetDuplicateCodes(aggregationProduct).ToList();
+
+
+            var parent = FindParent(report.GetAggregationData(pathAggregation), "04640112140537+npOcP<");
+
             Console.WriteLine("Press any key");
             Console.ReadKey();
         }
@@ -71,21 +57,11 @@ namespace ParseAggregationReport
             var result = enumerable.Intersect(findCodes);
             return result.Any();
         }
-    }
 
-    public class AggregationReport {
-        public List<AggregationUnit> aggregationUnits { get; set; }
-        public string participantId { get; set; }
-        public int productionLineId { get; set; }
-
-    }
-
-    public class AggregationUnit {
-        public int aggregatedItemsCount { get; set; }
-        public string aggregationType { get; set; }
-        public int aggregationUnitCapacity { get; set; }
-        public List<string> sntins { get; set; }
-        public string unitSerialNumber { get; set; }
-
+        private static IEnumerable<string> FindParent( AggregationReport data, string code ) =>
+            data.aggregationUnits
+                .Where( u => u.sntins.Any( code.StartsWith ) )
+                .Select( u => u.unitSerialNumber )
+                .ToList();
     }
 }

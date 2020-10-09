@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseAggregationReport", "ParseAggregationReport\ParseAggregationReport.csproj", "{63B58A8B-163A-4C1D-B040-6106468F1D17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseReport", "ParseAggregationReport\ParseReport.csproj", "{63B58A8B-163A-4C1D-B040-6106468F1D17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
