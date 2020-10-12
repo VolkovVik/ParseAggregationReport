@@ -21,6 +21,16 @@ namespace ParseReport
             return data;
         }
 
+        public IEnumerable<string> GetUseProduct(IEnumerable<string> paths)
+        {
+            var products = new List<string>();
+            foreach (var list in paths.Select(GetUseProduct))
+            {
+                products.AddRange(list);
+            }
+            return products;
+        }
+
         public IEnumerable<string> GetUseProduct(string path)
         {
             var str = ReadFile(path);
@@ -36,6 +46,16 @@ namespace ParseReport
             return data;
         }
 
+        public IEnumerable<string> GetAggregationProduct(IEnumerable<string> paths)
+        {
+            var products = new List<string>();
+            foreach (var list in paths.Select(GetAggregationProduct))
+            {
+                products.AddRange(list);
+            }
+            return products;
+        }
+
         public IEnumerable<string> GetAggregationProduct(string path)
         {
             var str = ReadFile(path);
@@ -47,6 +67,16 @@ namespace ParseReport
                 products.AddRange(item.sntins);
             }
             return products;
+        }
+
+        public IEnumerable<string> GetAggregationBlock(IEnumerable<string> paths)
+        {
+            var blocks = new List<string>();
+            foreach (var list in paths.Select(GetAggregationBlock))
+            {
+                blocks.AddRange(list);
+            }
+            return blocks;
         }
 
         public IEnumerable<string> GetAggregationBlock(string path)

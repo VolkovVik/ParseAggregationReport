@@ -30,8 +30,12 @@ namespace ParseReport
         }
 
         private static void CheckReportData() {
-            const string pathUse = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1382_CreateUtilisationReport.json";
-            const string pathAggregation = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1383_CreateAggregationReport.json";
+            var pathUse = new []{
+                "C:\\Users\\Vvolkov\\Desktop\\C95111020-9 [2020-10-11]\\reports111\\4313_CreateUtilisationReport.json",
+                "C:\\Users\\Vvolkov\\Desktop\\C95111020-9 [2020-10-11]\\reports111\\4314_CreateUtilisationReport.json"};
+            var pathAggregation = new []{
+                "C:\\Users\\Vvolkov\\Desktop\\C95111020-9 [2020-10-11]\\reports111\\4315_CreateAggregationReport.json",
+                "C:\\Users\\Vvolkov\\Desktop\\C95111020-9 [2020-10-11]\\reports111\\4316_CreateAggregationReport.json"};
 
             var report = new Report();
             var aggregationProduct = report.GetAggregationProduct(pathAggregation).ToList();
@@ -42,13 +46,16 @@ namespace ParseReport
                                             : p.Substring(0, 21))
                                    .ToList();
 
+            var countProduct = useProduct.Count(p => !p.StartsWith("01") && !p.StartsWith("02"));
+            var countBlock = useProduct.Count(p => p.StartsWith("01") || p.StartsWith("02"));
+
             var different = aggregationProduct.Except(useProduct).ToList();
             var common = aggregationProduct.Intersect(useProduct).ToList();
 
             var useDuplicate = GetDuplicateCodes(useProduct).ToList();
             var aggregationDuplicate = GetDuplicateCodes(aggregationProduct).ToList();
 
-            var parent = FindParent(report.GetAggregationData(pathAggregation), "04640112140070ddXGrUN");
+            var parent = FindParent(report.GetAggregationData(pathAggregation[0]), "04640112140070ddXGrUN");
         }
 
         private static IEnumerable<string> GetUniqueCodes(IEnumerable<string> codes)
