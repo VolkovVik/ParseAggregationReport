@@ -30,8 +30,8 @@ namespace ParseReport
         }
 
         private static void CheckReportData() {
-            const string pathUse = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1355_CreateUtilisationReport.json";
-            const string pathAggregation = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1356_CreateAggregationReport.json";
+            const string pathUse = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1382_CreateUtilisationReport.json";
+            const string pathAggregation = "C:\\Users\\Vvolkov\\Desktop\\SmokyShaft\\1383_CreateAggregationReport.json";
 
             var report = new Report();
             var aggregationProduct = report.GetAggregationProduct(pathAggregation).ToList();
@@ -42,14 +42,13 @@ namespace ParseReport
                                             : p.Substring(0, 21))
                                    .ToList();
 
-            var diffirent = aggregationProduct.Except(useProduct).ToList();
+            var different = aggregationProduct.Except(useProduct).ToList();
             var common = aggregationProduct.Intersect(useProduct).ToList();
 
             var useDuplicate = GetDuplicateCodes(useProduct).ToList();
             var aggregationDuplicate = GetDuplicateCodes(aggregationProduct).ToList();
 
-
-            var parent = FindParent(report.GetAggregationData(pathAggregation), "04640112140537+npOcP<");
+            var parent = FindParent(report.GetAggregationData(pathAggregation), "04640112140070ddXGrUN");
         }
 
         private static IEnumerable<string> GetUniqueCodes(IEnumerable<string> codes)

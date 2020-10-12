@@ -132,6 +132,5 @@ namespace ParseReport.Model
 
         [Description("Не найден в коробах")]
         NotFoundInBlocks,
-
     }
 }
